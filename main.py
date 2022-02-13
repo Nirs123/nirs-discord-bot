@@ -50,5 +50,4 @@ async def on_message(message):
         time.sleep(2)
         await message.channel.send(tmp[1])
 
-load_dotenv('.env')
 client.run(os.getenv("TOKEN"))
