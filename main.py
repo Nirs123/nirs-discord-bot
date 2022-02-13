@@ -4,9 +4,6 @@ import requests
 import json
 import time
 import random
-from keep_alive import keep_alive
-
-keep_alive()
 
 client = discord.Client()
 
