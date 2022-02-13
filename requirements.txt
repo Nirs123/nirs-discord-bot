@@ -1,5 +1,4 @@
 discord
 requests
-json
 time
 random
