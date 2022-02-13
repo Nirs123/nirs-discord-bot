@@ -1,5 +1,4 @@
 discord
-dotenv
 requests
 json
 time
