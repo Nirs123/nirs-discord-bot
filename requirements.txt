@@ -1,0 +1,7 @@
+discord
+os
+dotenv
+requests
+json
+time
+random
