@@ -1,3 +1,4 @@
+from ssl import CHANNEL_BINDING_TYPES
 import discord
 import os
 import requests
@@ -49,5 +50,8 @@ async def on_message(message):
         await message.channel.send(tmp[0])
         time.sleep(2)
         await message.channel.send(tmp[1])
+
+    if message.content.startswith("!commandes"):
+        await message.channel.send("ceci ets un test uwu")
 
 client.run(os.getenv("TOKEN"))
