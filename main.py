@@ -54,4 +54,7 @@ async def on_message(message):
     if message.content.startswith("!commandes"):
         await message.channel.send("oquiysdfrpiqgt")
 
+    if message.content.startswith("!123test"):
+        await message.channel.send("ceci est un test")
+
 client.run(os.getenv("TOKEN"))
