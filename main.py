@@ -56,5 +56,8 @@ async def on_message(message):
 
     if message.content.startswith("!123test"):
         await message.channel.send(message.author)
+    
+    if message.author == "Nirs#9861":
+        await message.add_reaction(":clown:")
 
 client.run(os.getenv("TOKEN"))
