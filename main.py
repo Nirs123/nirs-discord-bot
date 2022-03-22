@@ -55,6 +55,6 @@ async def on_message(message):
         await message.channel.send("oquiysdfrpiqgt")
 
     if message.content.startswith("!123test"):
-        await message.channel.send("ceci est un test")
+        await message.channel.send(message.author)
 
 client.run(os.getenv("TOKEN"))
