@@ -58,6 +58,6 @@ async def on_message(message):
         await message.channel.send(message.author)
     
     if message.author == "Nirs#9861":
-        await message.add_reaction(":clown:")
+        await message.channel.send("envoyé par nirs")
 
 client.run(os.getenv("TOKEN"))
