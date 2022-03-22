@@ -56,9 +56,8 @@ async def on_message(message):
 
     if message.content.startswith("!123test"):
         await message.channel.send(message.author)
-        await message.channel.send(type(message.author))
     
-    '''if message.author == Nirs#9861:
-        await message.channel.send("envoyé par nirs")'''
+    if message.author.name == 'Nirs':
+        await message.channel.send("envoyé par nirs")
 
 client.run(os.getenv("TOKEN"))
