@@ -23,7 +23,7 @@ async def on_ready():
 async def on_message(message):
     if message.author == client.user:
         return
-        
+
     if message.content.startswith("!test"):
         await message.channel.send("tg")
 
@@ -58,7 +58,7 @@ async def on_message(message):
         await message.channel.send(message.author)
     
     if message.author.name == '🥩SkLopee🥩':
-        await message.add_reaction("<:pp0:839219763573948416>")
+        '''await message.add_reaction("<:pp0:839219763573948416>")'''
     
 
 client.run(os.getenv("TOKEN"))
