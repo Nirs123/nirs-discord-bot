@@ -15,6 +15,12 @@ def blague():
     r = json_data['joke']['answer']
     return [q,r]
 
+def status_serv_mc():
+    tmp = requests.get("https://mcapi.us/server/status?ip=90.78.10.90&port=25565")
+    json_data = json.loads(tmp.text)
+    status = json_data["online"]
+    return status
+
 @client.event
 async def on_ready():
     print("We have logged in as {0.user}".format(client))
@@ -24,20 +30,8 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    if message.content.startswith("!test"):
-        await message.channel.send("tg")
-
     if message.content.startswith("!launch lost Ark"):
         await message.channel.send("Suite a plusieurs problèmes techniques, nous reportons le lancement de Lost Ark au 18 Mars 2024")
-    ''''
-    if "pseudo" in message.content:
-        await message.channel.send(f"{message.author.mention} tg")
-    '''
-
-    '''
-    if "cringe" in message.content:
-        await message.channel.send(file=discord.File('img/cringe.gif'))
-    '''
 
     if "cringe" in message.content:
         if random.randint(0,1) == 0:
@@ -51,14 +45,16 @@ async def on_message(message):
         time.sleep(2)
         await message.channel.send(tmp[1])
 
-    if message.content.startswith("!commandes"):
-        await message.channel.send("oquiysdfrpiqgt")
+    if message.content.startswith("!serveur"):
+        tmp = status_serv_mc()
+        if tmp == "false":
+            await message.channel.send("OFFLINE")
+        elif tmp == "true":
+            await message.channel.send("ONLINE")
 
-    if message.content.startswith("!123test"):
-        await message.channel.send(message.author)
+    if message.content.startswith("!commandes"):
+        await message.channel.send("You can use the following commands: **!blague** and **!serveur**")
     
-    if message.author.name == '🥩SkLopee🥩':
-        '''await message.add_reaction("<:pp0:839219763573948416>")'''
     
 
 client.run(os.getenv("TOKEN"))
