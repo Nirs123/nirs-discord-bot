@@ -5,7 +5,9 @@ import requests
 import json
 import time
 import random
+from dotenv import load_dotenv
 
+load_dotenv()
 client = discord.Client()
 
 def blague():
@@ -47,14 +49,12 @@ async def on_message(message):
 
     if message.content.startswith("!serveur"):
         tmp = status_serv_mc()
-        if tmp == "false":
-            await message.channel.send("OFFLINE")
-        elif tmp == "true":
-            await message.channel.send("ONLINE")
+        if tmp == True:
+            await message.channel.send("Le serveur est en ligne ✅")
+        elif tmp == False:
+            await message.channel.send("Le serveur est hors-ligne ❌")
 
     if message.content.startswith("!commandes"):
-        await message.channel.send("You can use the following commands: **!blague** and **!serveur**")
+        await message.channel.send("**You can use the following commands:**\n!blague\n!serveur")
     
-    
-
-client.run(os.getenv("TOKEN"))
+client.run(os.getenv('TOKEN'))
