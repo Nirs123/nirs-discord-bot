@@ -66,14 +66,16 @@ async def on_message(message):
 
     if message.content.startswith("!mmr"):
         tmp = str(message.content[5:len(message.content)])
-        rep = mmr(tmp)
-        print(rep)
-        if rep == None:
+        #rep = mmr(tmp)
+        tmp2 = requests.get(f"https://euw.whatismymmr.com/api/v1/summoner?name={tmp}")
+        json_data = json.loads(tmp2.text)
+        print(json_data)
+        """if rep == None:
             await message.channel.send("Erreur: le joueur n'est pas trouvé/n'a pas de rank")
         else:
-            await message.channel.send("MMR: "+str(rep[0])+"\nRank: "+str(rep[1]))
+            await message.channel.send("MMR: "+str(rep[0])+"\nRank: "+str(rep[1]))"""
 
     if message.content.startswith("!commandes"):
-        await message.channel.send("**You can use the following commands:**\n!blague (disponible cet été a l'ouverture du serveur MC)\n!serveur\n!mmr")
+        await message.channel.send("**You can use the following commands:**\n!blague \n!serveur (disponible cet été a l'ouverture du serveur MC)\n!mmr")
 
 client.run(os.getenv('TOKEN'))
