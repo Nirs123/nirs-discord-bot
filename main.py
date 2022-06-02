@@ -17,6 +17,16 @@ def blague():
     r = json_data['joke']['answer']
     return [q,r]
 
+def mmr(pseudo):
+    tmp = requests.get(f"https://euw.whatismymmr.com/api/v1/summoner?name={pseudo}")
+    json_data = json.loads(tmp.text)
+    try:
+        m = json_data['ranked']['avg']
+        r = json_data['ranked']['closestRank']
+        return [m,r]
+    except:
+        return None
+
 def status_serv_mc():
     tmp = requests.get("https://mcapi.us/server/status?ip=90.78.10.90&port=25565")
     json_data = json.loads(tmp.text)
@@ -54,7 +64,15 @@ async def on_message(message):
         elif tmp == False:
             await message.channel.send("Le serveur est hors-ligne ❌")
 
+    if message.content.startswith("!mmr"):
+        tmp = str(message.content[5:len(message.content)])
+        rep = mmr(tmp)
+        if rep == None:
+            await message.channel.send("Erreur: le joueur n'est pas trouvé/n'a pas de rank")
+        else:
+            await message.channel.send("MMR: "+str(rep[0])+"\nRank: "+str(rep[1]))
+
     if message.content.startswith("!commandes"):
-        await message.channel.send("**You can use the following commands:**\n!blague\n!serveur")
+        await message.channel.send("**You can use the following commands:**\n!blague\n!serveur\n!mmr")
     
 client.run(os.getenv('TOKEN'))
