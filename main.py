@@ -75,4 +75,5 @@ async def on_message(message):
     if message.content.startswith("!commandes"):
         await message.channel.send("**You can use the following commands:**\n!blague\n!serveur\n!mmr")
     
+
 client.run(os.getenv('TOKEN'))
