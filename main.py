@@ -46,10 +46,7 @@ async def on_message(message):
         await message.channel.send("Suite a plusieurs problèmes techniques, nous reportons le lancement de Lost Ark au 18 Mars 2024")
 
     if "cringe" in message.content:
-        if random.randint(0,1) == 0:
-            await message.channel.send("a-t-on parlé de ppo ?")
-        else:
-            await message.channel.send("a-t-on parlé de shuttoo ?")
+        await message.channel.send("a-t-on parlé de ppo ?")
 
     if message.content.startswith("!blague"):
         tmp = blague()
@@ -66,14 +63,11 @@ async def on_message(message):
 
     if message.content.startswith("!mmr"):
         tmp = str(message.content[5:len(message.content)])
-        #rep = mmr(tmp)
-        tmp2 = requests.get(f"https://euw.whatismymmr.com/api/v1/summoner?name={tmp}")
-        json_data = json.loads(tmp2.text)
-        print(json_data)
-        """if rep == None:
+        rep = mmr(tmp)
+        if rep == None:
             await message.channel.send("Erreur: le joueur n'est pas trouvé/n'a pas de rank")
         else:
-            await message.channel.send("MMR: "+str(rep[0])+"\nRank: "+str(rep[1]))"""
+            await message.channel.send("MMR: "+str(rep[0])+"\nRank: "+str(rep[1]))
 
     if message.content.startswith("!commandes"):
         await message.channel.send("**You can use the following commands:**\n!blague \n!serveur (disponible cet été a l'ouverture du serveur MC)\n!mmr")
