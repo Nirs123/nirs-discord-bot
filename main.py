@@ -150,7 +150,5 @@ async def mmr(ctx, Pseudo):
 async def translate(ctx, *Texte):
     await ctx.send(f_translate(" ".join(Texte)).text)
 
-print(f_translate("Hello my name is Nicolas"))
-
 #Lancement du Bot
 bot.run(os.getenv('TOKEN'))
