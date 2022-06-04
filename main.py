@@ -61,12 +61,12 @@ async def on_message(message):
     if message.content.startswith("cringe"):
         await message.channel.send("a-t-on parlé de ppo ?")
     await bot.process_commands(message)
-
+"""
 #Check on deleted message
 @bot.event
 async def on_message_delete(message):
     await message.channel.send(f"```diff\n-MESSAGE DELETED\n+DATE: {date_now()}\n+AUTEUR: {message.author}\n+MESSAGE: {message.content}```")
-"""
+
 #Check on message edit
 @bot.event
 async def on_message_edit(before,after):
