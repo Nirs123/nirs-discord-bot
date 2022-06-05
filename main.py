@@ -1,13 +1,15 @@
+from pydoc import describe
 import discord
 from discord.ext import commands
 import os
+import googletrans
 import requests
 import json
 import time
 from dotenv import load_dotenv
 from datetime import date
 from datetime import datetime
-from googletrans import Translator
+import googletrans
 
 load_dotenv()
 
@@ -18,7 +20,7 @@ def date_now():
     return rep_date
 #Translate
 def f_translate(text):
-    translator = Translator()
+    translator = googletrans.Translator()
     return (translator.translate(text,dest="fr"))
 #API Blague
 def api_blague():
@@ -123,32 +125,41 @@ async def translate(ctx):
 @bot.command()
 async def blague(ctx):
     rep_blague = api_blague()
-    await ctx.send(rep_blague[0])
+    em1 = discord.Embed(title=rep_blague[0],color= 0x992d22)
+    await ctx.send(embed = em1)
     time.sleep(2)
-    await ctx.send(rep_blague[1])
+    em2 = discord.Embed(title=rep_blague[1],color= 0x992d22)
+    await ctx.send(embed = em2)
 
 #Commande serveur
 @bot.command()
 async def serveur(ctx):
     rep_serv = api_status_serv_mc()
     if rep_serv == True:
-        await ctx.send("Le serveur est en ligne ✅")
+        em = discord.Embed(title="Le serveur est en ligne ✅",color=0x2ecc71)
+        await ctx.send(embed = em)
     elif rep_serv == False:
-        await ctx.send("Le serveur est hors-ligne ❌")
+        em = discord.Embed(title="Le serveur est hors-ligne ❌",color=0x992d22)
+        await ctx.send(embed = em)
 
 #Commande mmr
 @bot.command()
 async def mmr(ctx, Pseudo):
     rep_mmr = api_mmr(Pseudo)
     if rep_mmr == None:
-        await ctx.send("Erreur: le joueur n'est pas trouvé/n'a pas de rank")
+        em = discord.Embed(title="Erreur possibles:",description="Le joueur n'est pas trouvé\nLe joueur n'a pas de rank\nLe service n'est pas disponible",color= 0x992d22)
+        await ctx.send(embed = em)
     else:
-        await ctx.send("MMR: "+str(rep_mmr[0])+"\nRank: "+str(rep_mmr[1]))
+        em = discord.Embed(title=f"Stats du joueur: {Pseudo}",description=str("MMR: "+str(rep_mmr[0])+"\nRank: "+str(rep_mmr[1])),color= 0x992d22)
+        await ctx.send(embed = em)
 
 #Commande translate
+lang = googletrans.LANGUAGES
 @bot.command()
 async def translate(ctx, *Texte):
-    await ctx.send(f_translate(" ".join(Texte)).text)
+    rep_translate = f_translate(" ".join(Texte))
+    em = discord.Embed(title=f"Traduction en Français depuis {f_translate(lang[rep_translate.src.lower()]).text}",description=rep_translate.text,color=0x992d22)
+    await ctx.send(embed = em)
 
 #Lancement du Bot
 bot.run(os.getenv('TOKEN'))
