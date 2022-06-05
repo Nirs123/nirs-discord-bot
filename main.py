@@ -169,7 +169,7 @@ async def serveur(ctx):
         em = discord.Embed(title="Le serveur est hors-ligne ❌",color=0x992d22)
         await ctx.send(embed = em)
 
-dico_rank = {"Fer":0x992d22,"Bronze": 0xa84300,"Silver": 0x979c9f,"Gold": 0xf1c40f,"Platine": 0x1abc9c,"Diamond": 0x206694,"Master": 0x71368a,"Grandmaster": 0xad1457,"Challenger": 0x7289da}
+dico_rank = {"Iron":0x992d22,"Bronze": 0xa84300,"Silver": 0x979c9f,"Gold": 0xf1c40f,"Platinum": 0x1abc9c,"Diamond": 0x206694,"Master": 0x71368a,"Grandmaster": 0xad1457,"Challenger": 0x7289da}
 #Commande mmr
 @bot.command()
 async def mmr(ctx, Pseudo):
