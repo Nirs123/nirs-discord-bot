@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 from datetime import date
 from datetime import datetime
 import googletrans
+from riotwatcher import LolWatcher
 
 load_dotenv()
 
@@ -30,13 +31,22 @@ def api_blague():
     r = json_data['joke']['answer']
     return [q,r]
 #API mmr
+lol_watcher = LolWatcher(str(os.getenv('RIOT_API_KEY')))
+region = "euw1"
+ranks=["MASTER","GRANDMASTER","CHALLENGER"]
 def api_mmr(pseudo):
     tmp = requests.get(f"https://euw.whatismymmr.com/api/v1/summoner?name={pseudo}")
+    player = lol_watcher.summoner.by_name(region,pseudo)
+    ranked_stats = lol_watcher.league.by_summoner(region,player['id'])
     json_data = json.loads(tmp.text)
     try:
         m = json_data['ranked']['avg']
-        r = json_data['ranked']['closestRank']
-        return [m,r]
+        r_t = json_data['ranked']['closestRank']
+        if ranked_stats[0]["tier"] in ranks:
+            r_r = ranked_stats[0]["tier"].title()
+        else:
+            r_r = ranked_stats[0]["tier"].title()+" "+ranked_stats[0]["rank"]
+        return [m,r_t,r_r]
     except:
         return None
 #API Status serveur MC
@@ -90,7 +100,7 @@ async def on_member_leave(member):
 @bot.group(invoke_without_command=True)
 async def help(ctx):
     em = discord.Embed(title='You can use the following commands:',color = 0x992d22,description="!blague\n   !mmr\n   !serveur\n   !translate\n\n\
-You can also type !help [command] to Show help to the command")
+You can also type !help [command] to show help for the command")
     await ctx.send(embed = em)
 
 #Commande help blague
@@ -100,6 +110,7 @@ async def blague(ctx):
     em.add_field(name ="**Syntax**", value = "!blague")
     await ctx.send(embed = em)
 
+rank_colors = []
 #Commande help mmr
 @help.command()
 async def mmr(ctx):
@@ -142,6 +153,7 @@ async def serveur(ctx):
         em = discord.Embed(title="Le serveur est hors-ligne ❌",color=0x992d22)
         await ctx.send(embed = em)
 
+dico_rank = {"Fer":0x992d22,"Bronze": 0xa84300,"Silver": 0x979c9f,"Gold": 0xf1c40f,"Platine": 0x1abc9c,"Diamond": 0x206694,"Master": 0x71368a,"Grandmaster": 0xad1457,"Challenger": 0x7289da}
 #Commande mmr
 @bot.command()
 async def mmr(ctx, Pseudo):
@@ -150,7 +162,7 @@ async def mmr(ctx, Pseudo):
         em = discord.Embed(title="Erreur possibles:",description="Le joueur n'est pas trouvé\nLe joueur n'a pas de rank\nLe service n'est pas disponible",color= 0x992d22)
         await ctx.send(embed = em)
     else:
-        em = discord.Embed(title=f"Stats du joueur: {Pseudo}",description=str("MMR: "+str(rep_mmr[0])+"\nRank: "+str(rep_mmr[1])),color= 0x992d22)
+        em = discord.Embed(title=f"Stats du joueur: {Pseudo}",description=str("MMR: "+str(rep_mmr[0])+" qui correspond a "+str(rep_mmr[1])+"\nRank actuel: "+str(rep_mmr[2])),color=dico_rank[rep_mmr[1].split()[0]])
         await ctx.send(embed = em)
 
 #Commande translate
