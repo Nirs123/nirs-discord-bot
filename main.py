@@ -38,16 +38,20 @@ def api_mmr(pseudo):
     tmp = requests.get(f"https://euw.whatismymmr.com/api/v1/summoner?name={pseudo}&apiKey={str(os.getenv('MMR_API_KEY'))}")
     player = lol_watcher.summoner.by_name(region,pseudo)
     ranked_stats = lol_watcher.league.by_summoner(region,player['id'])
+    if ranked_stats[0]['queueType'] == "RANKED_FLEX_SR":
+        index = 1
+    elif ranked_stats[0]['queueType'] == "RANKED_SOLO_5x5":
+        index = 0
     json_data = json.loads(tmp.text)
     try:
         m = json_data['ranked']['avg']
         r_t = json_data['ranked']['closestRank']
-        if ranked_stats[0]["tier"] in ranks:
-            r_r = ranked_stats[0]["tier"].title()
+        if ranked_stats[index]["tier"] in ranks:
+            r_r = ranked_stats[index]["tier"].title()
         else:
-            r_r = ranked_stats[0]["tier"].title()+" "+ranked_stats[0]["rank"]
-        wins = ranked_stats[0]["wins"]
-        losses = ranked_stats[0]["losses"]
+            r_r = ranked_stats[index]["tier"].title()+" "+ranked_stats[index]["rank"]
+        wins = ranked_stats[index]["wins"]
+        losses = ranked_stats[index]["losses"]
         wr_b = (wins * 100) / (wins+losses)
         wr = round(wr_b,1)
         return [m,r_t,r_r,wins,losses,wr]
