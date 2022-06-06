@@ -35,22 +35,10 @@ lol_watcher = LolWatcher(str(os.getenv('RIOT_API_KEY')))
 region = "euw1"
 ranks=["MASTER","GRANDMASTER","CHALLENGER"]
 def api_mmr(pseudo):
-    tmp = requests.get(f"https://euw.whatismymmr.com/api/v1/summoner?name={pseudo}")
+    tmp = requests.get(f"https://euw.whatismymmr.com/api/v1/summoner?name={pseudo}&apiKey={str(os.getenv('MMR_API_KEY'))}")
     player = lol_watcher.summoner.by_name(region,pseudo)
     ranked_stats = lol_watcher.league.by_summoner(region,player['id'])
-    try:
-        if ranked_stats[0]["tier"] in ranks:
-                r_r = ranked_stats[0]["tier"].title()
-        else:
-            r_r = ranked_stats[0]["tier"].title()+" "+ranked_stats[0]["rank"]
-        wins = ranked_stats[0]["wins"]
-        losses = ranked_stats[0]["losses"]
-        wr_b = (wins * 100) / (wins+losses)
-        wr = round(wr_b,1)
-        return [r_r,wins,losses,wr]
-    except:
-        return None
-    """json_data = json.loads(tmp.text)
+    json_data = json.loads(tmp.text)
     try:
         m = json_data['ranked']['avg']
         r_t = json_data['ranked']['closestRank']
@@ -64,7 +52,7 @@ def api_mmr(pseudo):
         wr = round(wr_b,1)
         return [m,r_t,r_r,wins,losses,wr]
     except:
-        return None"""
+        return None
 #API Status serveur MC
 def api_status_serv_mc():
     tmp = requests.get("https://mcapi.us/server/status?ip=90.78.10.90&port=25565")
@@ -175,11 +163,10 @@ dico_rank = {"Iron":0x992d22,"Bronze": 0xa84300,"Silver": 0x979c9f,"Gold": 0xf1c
 async def mmr(ctx, Pseudo):
     rep_mmr = api_mmr(Pseudo)
     if rep_mmr == None:
-        em = discord.Embed(title="Erreur possibles:",description="Le joueur n'est pas trouvé\nLe joueur n'a pas de rank\nLe service n'est pas disponible",color= 0x992d22)
+        em = discord.Embed(title="Erreurs possibles:",description="Le joueur n'est pas trouvé\nLe joueur n'a pas de rank\nLe service n'est pas disponible",color= 0x992d22)
         await ctx.send(embed = em)
     else:
-        #em = discord.Embed(title=f"Stats du joueur: {Pseudo}",description=str("MMR: "+str(rep_mmr[0])+" qui correspond a "+str(rep_mmr[1])+"\nRank actuel: "+str(rep_mmr[2])+"\nWins: "+str(rep_mmr[3])+"\nLosses: "+str(rep_mmr[4])+"\nWinrate: "+str(rep_mmr[5])),color=dico_rank[rep_mmr[2].split()[0]])
-        em = discord.Embed(title=f"Stats du joueur: {Pseudo}",description=str("Rank actuel: "+str(rep_mmr[0])+"\nWins: "+str(rep_mmr[1])+"\nLosses: "+str(rep_mmr[2])+"\nWinrate: "+str(rep_mmr[3])+"%"),color=dico_rank[rep_mmr[0].split()[0]])
+        em = discord.Embed(title=f"Stats du joueur: {Pseudo}",description=str("MMR: "+str(rep_mmr[0])+" qui correspond a "+str(rep_mmr[1])+"\nRank actuel: "+str(rep_mmr[2])+"\nWins: "+str(rep_mmr[3])+"\nLosses: "+str(rep_mmr[4])+"\nWinrate: "+str(rep_mmr[5])),color=dico_rank[rep_mmr[2].split()[0]])
         await ctx.send(embed = em)
 
 #Commande translate
