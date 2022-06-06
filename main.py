@@ -82,7 +82,7 @@ async def on_ready():
 #Check de tout les messages
 @bot.event
 async def on_message(message):
-    if message.content.startswith("cringe"):
+    if "cringe" in message.content:
         await message.channel.send("a-t-on parlé de ppo ?")
     await bot.process_commands(message)
 
