@@ -1,4 +1,3 @@
-from pydoc import describe
 import discord
 from discord.ext import commands
 import os
@@ -38,10 +37,13 @@ def api_mmr(pseudo):
     tmp = requests.get(f"https://euw.whatismymmr.com/api/v1/summoner?name={pseudo}&apiKey={str(os.getenv('MMR_API_KEY'))}")
     player = lol_watcher.summoner.by_name(region,pseudo)
     ranked_stats = lol_watcher.league.by_summoner(region,player['id'])
-    if ranked_stats[0]['queueType'] == "RANKED_FLEX_SR":
-        index = 1
-    elif ranked_stats[0]['queueType'] == "RANKED_SOLO_5x5":
-        index = 0
+    try:
+        if ranked_stats[0]['queueType'] == "RANKED_FLEX_SR":
+            index = 1
+        elif ranked_stats[0]['queueType'] == "RANKED_SOLO_5x5":
+            index = 0
+    except:
+        return None
     json_data = json.loads(tmp.text)
     try:
         m = json_data['ranked']['avg']
@@ -66,7 +68,9 @@ def api_status_serv_mc():
 
 
 #Initialisation du bot
-bot = commands.Bot(command_prefix="!",activity = discord.Game(name="Type !help"),help_command=None)
+intents = discord.Intents.default()
+intents.members = True
+bot = commands.Bot(command_prefix="!",intents=intents,activity = discord.Game(name="Type !help"),help_command=None)
 
 
 #EVENTS
@@ -81,27 +85,7 @@ async def on_message(message):
     if message.content.startswith("cringe"):
         await message.channel.send("a-t-on parlé de ppo ?")
     await bot.process_commands(message)
-"""
-#Check on deleted message
-@bot.event
-async def on_message_delete(message):
-    await message.channel.send(f"```diff\n-MESSAGE DELETED\n+DATE: {date_now()}\n+AUTEUR: {message.author}\n+MESSAGE: {message.content}```")
 
-#Check on message edit
-@bot.event
-async def on_message_edit(before,after):
-    await before.channel.send(f"```diff\n-MESSAGE EDITED\n+DATE: {date_now()}\n+AUTEUR: {before.author}\n+MESSAGE BEFORE: {before.content}\n+MESSAGE AFTER: {after.content}```")
-
-#Check on member join
-@bot.event
-async def on_member_join(member):
-    pass
-
-#Check on member leave
-@bot.event
-async def on_member_leave(member):
-    pass
-"""
 
 #COMMANDS
 #Commandes help
@@ -180,6 +164,7 @@ async def translate(ctx, *Texte):
     rep_translate = f_translate(" ".join(Texte))
     em = discord.Embed(title=f"Traduction en Français depuis {f_translate(lang[rep_translate.src.lower()]).text}",description=rep_translate.text,color=0x992d22)
     await ctx.send(embed = em)
+
 
 #Lancement du Bot
 bot.run(os.getenv('TOKEN'))
