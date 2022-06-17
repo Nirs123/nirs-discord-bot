@@ -10,7 +10,6 @@ from datetime import date
 from datetime import datetime
 import googletrans
 from riotwatcher import LolWatcher
-import matplotlib.pyplot as plt
 import os
 
 load_dotenv()
@@ -50,17 +49,6 @@ def api_mmr(pseudo):
     try:
         m = json_data['ranked']['avg']
         r_t = json_data['ranked']['closestRank']
-
-        h_x,h_y = [],[]
-        for elem in json_data['ranked']["historical"]:
-            h_x.append(datetime.fromtimestamp(elem["timestamp"]).strftime('%d/%m'))
-            h_y.append(elem["avg"])
-        plt.clf()
-        plt.plot(h_x,h_y)
-        plt.gca().invert_xaxis()
-        plt.xlabel("Temps")
-        plt.ylabel("MMR")
-        plt.savefig("tmp_mmr.png")
 
         if ranked_stats[index]["tier"] in ranks:
             r_r = ranked_stats[index]["tier"].title()
@@ -168,11 +156,10 @@ async def mmr(ctx, Pseudo):
         em = discord.Embed(title="Erreurs possibles:",description="Le joueur n'est pas trouvé\nLe joueur n'a pas de rank\nLe service n'est pas disponible",color= 0x992d22)
         await ctx.send(embed = em)
     else:
-        em = discord.Embed(title=f"Stats du joueur: {Pseudo}",description=str("MMR: "+str(rep_mmr[0])+" qui correspond a "+str(rep_mmr[1])+"\nRank actuel: "+str(rep_mmr[2])+"\nWins: "+str(rep_mmr[3])+"\nLosses: "+str(rep_mmr[4])+"\nWinrate: "+str(rep_mmr[5])),color=dico_rank[rep_mmr[2].split()[0]])
-        em.add_field(name="Historique du MMR:",value="Historique du MMR approximatif",inline=True)
-        tmp_file = discord.File("tmp_mmr.png",filename="image.png")
-        em.set_image(url="attachment://image.png")
-        await ctx.send(file=tmp_file,embed = em)
+        em = discord.Embed(title=f"Stats du joueur: {Pseudo}",description=str("**MMR:** "+str(rep_mmr[0])+" qui correspond a "+str(rep_mmr[1])+"\n**Rank actuel:** "+str(rep_mmr[2])+"\n**Wins:** "+str(rep_mmr[3])+"\n**Losses:** "+str(rep_mmr[4])+"\n**Winrate:** "+str(rep_mmr[5])+"%"),color=dico_rank[rep_mmr[2].split()[0]])
+        file = discord.File(f'ranks/{rep_mmr[2].split()[0]}.png') 
+        em.set_thumbnail(url=f"attachment://{rep_mmr[2].split()[0]}.png")
+        await ctx.send(file=file,embed = em)
 
 #Commande translate
 lang = googletrans.LANGUAGES
