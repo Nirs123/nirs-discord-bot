@@ -67,13 +67,20 @@ def api_status_serv_mc():
     json_data = json.loads(tmp.text)
     status = json_data["online"]
     return status
-
+#API News
+def api_news(arg):
+    tmp = requests.get(f"https://newsapi.org/v2/everything?q={arg}&apiKey={str(os.getenv('NEWS_API_KEY'))}")
+    json_data = json.loads(tmp.text)
+    try:
+        texte = json_data["articles"][0]
+        return {"author":texte["source"]["name"],"title":texte["title"],"description":texte["description"],"url":texte["url"],"image":texte["urlToImage"]}
+    except:
+        return None
 
 #Initialisation du bot
 intents = discord.Intents.default()
 intents.members = True
 bot = commands.Bot(command_prefix="!",intents=intents,activity = discord.Game(name="Type !help"),help_command=None)
-
 
 #EVENTS
 #Connection du bot
@@ -88,12 +95,11 @@ async def on_message(message):
         await message.channel.send("a-t-on parlé de ppo ?")
     await bot.process_commands(message)
 
-
 #COMMANDS
 #Commandes help
 @bot.group(invoke_without_command=True)
 async def help(ctx):
-    em = discord.Embed(title='You can use the following commands:',color = 0x992d22,description="!blague\n   !mmr\n   !serveur\n   !translate\n\n\
+    em = discord.Embed(title='You can use the following commands:',color = 0x992d22,description="!blague\n   !mmr\n   !serveur\n   !translate\n   !news\n\n\
 You can also type !help [command] to show help for the command")
     await ctx.send(embed = em)
 
@@ -126,6 +132,13 @@ async def translate(ctx):
     em.add_field(name ="**Syntax**", value = "!translate [Texte]")
     await ctx.send(embed = em)
 
+#Commande help news
+@help.command()
+async def news(ctx):
+    em = discord.Embed(title="Commande !news",description="Renvoie le dernier article correspondant aux mots clés",color= 0x992d22)
+    em.add_field(name ="**Syntax**", value = "!news [Mots-Clés]")
+    await ctx.send(embed = em)
+
 #Commande blague
 @bot.command()
 async def blague(ctx):
@@ -153,7 +166,7 @@ dico_rank = {"Iron":0x992d22,"Bronze": 0xa84300,"Silver": 0x979c9f,"Gold": 0xf1c
 async def mmr(ctx, Pseudo):
     rep_mmr = api_mmr(Pseudo)
     if rep_mmr == None:
-        em = discord.Embed(title="Erreurs possibles:",description="Le joueur n'est pas trouvé\nLe joueur n'a pas de rank\nLe service n'est pas disponible",color= 0x992d22)
+        em = discord.Embed(title="Erreurs possibles:",description="Le joueur n'est pas trouvé\nLe joueur n'a pas de rank\nL'API n'est pas disponible",color= 0x992d22)
         await ctx.send(embed = em)
     else:
         em = discord.Embed(title=f"Stats du joueur: {Pseudo}",description=str("**MMR:** "+str(rep_mmr[0])+" qui correspond a "+str(rep_mmr[1])+"\n**Rank actuel:** "+str(rep_mmr[2])+"\n**Wins:** "+str(rep_mmr[3])+"\n**Losses:** "+str(rep_mmr[4])+"\n**Winrate:** "+str(rep_mmr[5])+"%"),color=dico_rank[rep_mmr[2].split()[0]])
@@ -169,6 +182,19 @@ async def translate(ctx, *Texte):
     em = discord.Embed(title=f"Traduction en Français depuis {f_translate(lang[rep_translate.src.lower()]).text}",description=rep_translate.text,color=0x992d22)
     await ctx.send(embed = em)
 
+#Commande News
+@bot.command()
+async def news(ctx, *Texte):
+    rep_news = api_news("+".join(Texte))
+    if rep_news != None:
+        em = discord.Embed(title=rep_news["title"],description=rep_news["description"],url=rep_news["url"],color=0x992d22)
+        if rep_news["image"] != None:
+            em.set_image(url=rep_news["image"])
+        em.set_author(name=rep_news["author"])
+        await ctx.send(embed = em)
+    else:
+        em = discord.Embed(title="Erreurs possibles:",description="Mauvais Arguments\nAucun article trouvé\nL'API n'est pas disponible",color= 0x992d22)
+        await ctx.send(embed = em)
 
 #Lancement du Bot
 bot.run(os.getenv('TOKEN'))
