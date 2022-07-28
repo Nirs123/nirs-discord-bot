@@ -76,6 +76,12 @@ def api_news(arg):
         return {"author":texte["source"]["name"],"title":texte["title"],"description":texte["description"],"url":texte["url"],"image":texte["urlToImage"]}
     except:
         return None
+#API Weather
+def api_weather(arg):
+    tmp = requests.get(f"https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/{arg}/today?unitGroup=metric&include=days%2Ccurrent&key={str(os.getenv('WEATHER_API_KEY'))}&contentType=json")
+    json_data = json.loads(tmp.text)
+    condition = json_data["currentConditions"]
+    return {"lieu":json_data["resolvedAddress"],"cond":condition["conditions"],"temp":condition["temp"],"hum":condition["humidity"],"wind":condition["windspeed"],"sunrise":condition["sunrise"],"sunset":condition["sunset"],"icon":condition["icon"]}
 
 #Initialisation du bot
 intents = discord.Intents.default()
@@ -195,6 +201,15 @@ async def news(ctx, *Texte):
     else:
         em = discord.Embed(title="Erreurs possibles:",description="Mauvais Arguments\nAucun article trouvé\nL'API n'est pas disponible",color= 0x992d22)
         await ctx.send(embed = em)
+
+#Commande Weather
+@bot.command()
+async def weather(ctx, *Texte):
+    rep_weather = api_weather(" ".join(Texte))
+    em = discord.Embed(title=f"Météo actuelle à {rep_weather['lieu']}:",description=str("**Conditions:** "+str(f_translate(str(rep_weather["cond"])).text)+"\n**Température:** "+str(rep_weather["temp"])+"°C"+"\n**Humidité:** "+str(rep_weather["hum"])+"%"+"\n**Vent:** "+str(rep_weather["wind"])+"km/h"+"\n**Lever du soleil:** "+str(rep_weather["sunrise"])+"\n**Coucher du soleil:** "+str(rep_weather["sunset"])),color=0x992d22)
+    file = discord.File(f"weather/{rep_weather['icon']}.png")
+    em.set_thumbnail(url=f'attachment://{rep_weather["icon"]}.png')
+    await ctx.send(file = file, embed = em)
 
 #Lancement du Bot
 bot.run(os.getenv('TOKEN'))
