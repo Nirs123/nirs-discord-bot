@@ -105,7 +105,7 @@ async def on_message(message):
 #Commandes help
 @bot.group(invoke_without_command=True)
 async def help(ctx):
-    em = discord.Embed(title='You can use the following commands:',color = 0x992d22,description="!blague\n   !mmr\n   !serveur\n   !translate\n   !news\n\n\
+    em = discord.Embed(title='You can use the following commands:',color = 0x992d22,description="!blague\n   !mmr\n   !serveur\n   !translate\n   !news\n   !weather\n\n\
 You can also type !help [command] to show help for the command")
     await ctx.send(embed = em)
 
@@ -116,7 +116,6 @@ async def blague(ctx):
     em.add_field(name ="**Syntax**", value = "!blague")
     await ctx.send(embed = em)
 
-rank_colors = []
 #Commande help mmr
 @help.command()
 async def mmr(ctx):
@@ -143,6 +142,13 @@ async def translate(ctx):
 async def news(ctx):
     em = discord.Embed(title="Commande !news",description="Renvoie le dernier article correspondant aux mots clés",color= 0x992d22)
     em.add_field(name ="**Syntax**", value = "!news [Mots-Clés]")
+    await ctx.send(embed = em)
+
+#Commande help weahter
+@help.command()
+async def weather(ctx):
+    em = discord.Embed(title="Commande !weather",description="Renvoie la météo actuelle de la ville sélectionée",color= 0x992d22)
+    em.add_field(name ="**Syntax**", value = "!weather [Ville]")
     await ctx.send(embed = em)
 
 #Commande blague
