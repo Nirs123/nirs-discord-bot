@@ -62,7 +62,7 @@ def api_mmr(pseudo):
         return None
 #API Status serveur MC
 def api_status_serv_mc():
-    tmp = requests.get("https://mcapi.us/server/status?ip=90.78.10.90&port=25565")
+    tmp = requests.get("https://mcapi.us/server/status?ip=nirs.verygames.net&port=25565")
     json_data = json.loads(tmp.text)
     status = json_data["online"]
     return status
