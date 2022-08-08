@@ -65,7 +65,16 @@ def api_status_serv_mc():
     tmp = requests.get("https://mcapi.us/server/status?ip=nirs.verygames.net&port=25565")
     json_data = json.loads(tmp.text)
     status = json_data["online"]
-    return status
+    player_list = []
+    if status == True:
+        if json_data["players"]["now"] > 0:
+            for elem in json_data["players"]["sample"]:
+                player_list.append("-"+str(elem["name"])+"\n")
+            return {"status":status,"version":json_data["server"]["name"],"player_list":player_list,"players":json_data["players"]["now"]}
+        else:
+            return {"status":status,"version":json_data["server"]["name"],"player_list":None}
+    else:
+        return {"status":status}
 #API News
 def api_news(arg):
     tmp = requests.get(f"https://newsapi.org/v2/everything?q={arg}&apiKey={str(os.getenv('NEWS_API_KEY'))}")
@@ -164,10 +173,14 @@ async def blague(ctx):
 @bot.command()
 async def serveur(ctx):
     rep_serv = api_status_serv_mc()
-    if rep_serv == True:
-        em = discord.Embed(title="Le serveur est en ligne ✅",color=0x2ecc71)
-        await ctx.send(embed = em)
-    elif rep_serv == False:
+    if rep_serv["status"] == True:
+        if rep_serv["player_list"] == None:
+            em = discord.Embed(title="Le serveur est en ligne ✅",description=str("**Version:** "+str(rep_serv['version'])+"\n**Joueurs Connectés:** 0"),color=0x2ecc71)
+            await ctx.send(embed = em)
+        else:
+            em = discord.Embed(title="Le serveur est en ligne ✅",description=str("**Version:** "+str(rep_serv['version'])+"\n**Joueurs Connectés:** "+str(rep_serv['players'])+"\n**Liste des joueurs connectés:**\n"+str("".join(rep_serv["player_list"]))),color=0x2ecc71)
+            await ctx.send(embed = em)
+    elif rep_serv["status"] == False:
         em = discord.Embed(title="Le serveur est hors-ligne ❌",color=0x992d22)
         await ctx.send(embed = em)
 
