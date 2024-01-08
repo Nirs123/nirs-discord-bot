@@ -1,3 +1,4 @@
+uvicorn
 discord
 requests
 python-dotenv
