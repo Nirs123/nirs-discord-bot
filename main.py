@@ -92,7 +92,7 @@ def api_weather(arg):
     return {"lieu":json_data["resolvedAddress"],"cond":condition["conditions"],"temp":condition["temp"],"hum":condition["humidity"],"wind":condition["windspeed"],"sunrise":condition["sunrise"],"sunset":condition["sunset"],"icon":condition["icon"]}
 
 #Initialisation du bot
-intents = discord.Intents.default()
+intents = discord.Intents.all()
 intents.members = True
 bot = commands.Bot(command_prefix="!",intents=intents,activity = discord.Game(name="Type !help"),help_command=None)
 
