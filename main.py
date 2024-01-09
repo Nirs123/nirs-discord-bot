@@ -30,7 +30,7 @@ def api_blague():
     r = json_data['joke']['answer']
     return [q,r]
 #API mmr
-lol_watcher = LolWatcher(str(os.getenv('RIOT_API_KEY')))
+lol_watcher = LolWatcher(api_key=str(os.getenv('RIOT_API_KEY')))
 region = "euw1"
 ranks=["MASTER","GRANDMASTER","CHALLENGER"]
 def api_mmr(pseudo):

@@ -1,0 +1,11 @@
+{
+  "apps": [
+    {
+      "app_id": "app_5817fa03-06c0-4057-9d65-829d3b815027",
+      "org_id": "orga_97b92657-1ad6-47e3-9cc3-05372c197737",
+      "deploy_url": "https://push-n3-par-clevercloud-customers.services.clever-cloud.com/app_5817fa03-06c0-4057-9d65-829d3b815027.git",
+      "name": "nf-discord-bot",
+      "alias": "nf-discord-bot"
+    }
+  ]
+}
