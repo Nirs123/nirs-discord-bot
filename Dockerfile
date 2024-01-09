@@ -13,5 +13,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copier le fichier Python dans le conteneur
 COPY main.py .
 
+EXPOSE 8080
+
 # Commande pour exécuter votre fichier Python
 CMD ["python3", "main.py"]
