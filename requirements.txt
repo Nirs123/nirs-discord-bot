@@ -4,3 +4,4 @@ python-dotenv
 googletrans==3.1.0a0
 riotwatcher
 matplotlib
+flask

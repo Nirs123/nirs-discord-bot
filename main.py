@@ -11,6 +11,11 @@ import googletrans
 from riotwatcher import LolWatcher
 import os
 
+from flask import Flask
+
+
+app = Flask(__name__)
+
 load_dotenv()
 
 #FUNCTIONS
@@ -229,5 +234,12 @@ async def weather(ctx, *Texte):
     em.set_thumbnail(url=f'attachment://{rep_weather["icon"]}.png')
     await ctx.send(file = file, embed = em)
 
-#Lancement du Bot
-bot.run(os.getenv('TOKEN'))
+
+@app.route('/')
+def home():
+    return 'Le Bot Discord est en ligne :)'
+
+#Lancement de l'application
+if __name__ == "__main__":
+    bot.run(os.getenv('TOKEN'))
+    app.run(port=8080)
