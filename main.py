@@ -11,6 +11,8 @@ import googletrans
 from riotwatcher import LolWatcher
 import os
 
+import threading
+
 from flask import Flask
 
 
@@ -239,7 +241,23 @@ async def weather(ctx, *Texte):
 def home():
     return 'Le Bot Discord est en ligne :)'
 
-#Lancement de l'application
-if __name__ == "__main__":
-    bot.run(os.getenv('TOKEN'))
+
+
+
+#Lancement des applications
+
+def run_flask():
     app.run(port=8080)
+
+def run_bot():
+    bot.run(os.getenv('TOKEN'))
+
+if __name__ == "__main__":
+    flask_thread = threading.Thread(target=run_flask)
+    bot_thread = threading.Thread(target=run_bot)
+
+    flask_thread.start()
+    bot_thread.start()
+
+    flask_thread.join()
+    bot_thread.join()
